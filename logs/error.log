@@ -1,0 +1,34 @@
+2025-05-13 01:51:04 ERROR: Failed to initialize extreme debugging system: cannot import name 'get_state' from 'flask_sqlalchemy' (/home/claudebypass/projects/code_snippets/venv/lib/python3.11/site-packages/flask_sqlalchemy/__init__.py) [in /home/claudebypass/projects/code_snippets/app/__init__.py:130]
+Traceback (most recent call last):
+  File "/home/claudebypass/projects/code_snippets/app/__init__.py", line 113, in create_app
+    DatabaseLogger.setup(db, app)
+  File "/home/claudebypass/projects/code_snippets/app/extreme_debug_implementation.py", line 748, in setup
+    from flask_sqlalchemy import get_state
+ImportError: cannot import name 'get_state' from 'flask_sqlalchemy' (/home/claudebypass/projects/code_snippets/venv/lib/python3.11/site-packages/flask_sqlalchemy/__init__.py)
+2025-05-13 01:51:04 WARNING: Falling back to standard logging configuration [in /home/claudebypass/projects/code_snippets/app/__init__.py:133]
+2025-05-13 01:51:04 ERROR: Failed to initialize extreme debugging system: cannot import name 'get_state' from 'flask_sqlalchemy' (/home/claudebypass/projects/code_snippets/venv/lib/python3.11/site-packages/flask_sqlalchemy/__init__.py) [in /home/claudebypass/projects/code_snippets/app/__init__.py:130]
+Traceback (most recent call last):
+  File "/home/claudebypass/projects/code_snippets/app/__init__.py", line 113, in create_app
+    DatabaseLogger.setup(db, app)
+  File "/home/claudebypass/projects/code_snippets/app/extreme_debug_implementation.py", line 748, in setup
+    from flask_sqlalchemy import get_state
+ImportError: cannot import name 'get_state' from 'flask_sqlalchemy' (/home/claudebypass/projects/code_snippets/venv/lib/python3.11/site-packages/flask_sqlalchemy/__init__.py)
+2025-05-13 01:51:04 WARNING: Falling back to standard logging configuration [in /home/claudebypass/projects/code_snippets/app/__init__.py:133]
+2025-05-13 01:51:04 ERROR: Failed to initialize extreme debugging system: cannot import name 'get_state' from 'flask_sqlalchemy' (/home/claudebypass/projects/code_snippets/venv/lib/python3.11/site-packages/flask_sqlalchemy/__init__.py) [in /home/claudebypass/projects/code_snippets/app/__init__.py:130]
+Traceback (most recent call last):
+  File "/home/claudebypass/projects/code_snippets/app/__init__.py", line 113, in create_app
+    DatabaseLogger.setup(db, app)
+  File "/home/claudebypass/projects/code_snippets/app/extreme_debug_implementation.py", line 748, in setup
+    from flask_sqlalchemy import get_state
+ImportError: cannot import name 'get_state' from 'flask_sqlalchemy' (/home/claudebypass/projects/code_snippets/venv/lib/python3.11/site-packages/flask_sqlalchemy/__init__.py)
+2025-05-13 01:51:04 WARNING: Falling back to standard logging configuration [in /home/claudebypass/projects/code_snippets/app/__init__.py:133]
+2025-05-13 01:51:04 ERROR: Failed to initialize extreme debugging system: cannot import name 'get_state' from 'flask_sqlalchemy' (/home/claudebypass/projects/code_snippets/venv/lib/python3.11/site-packages/flask_sqlalchemy/__init__.py) [in /home/claudebypass/projects/code_snippets/app/__init__.py:130]
+Traceback (most recent call last):
+  File "/home/claudebypass/projects/code_snippets/app/__init__.py", line 113, in create_app
+    DatabaseLogger.setup(db, app)
+  File "/home/claudebypass/projects/code_snippets/app/extreme_debug_implementation.py", line 748, in setup
+    from flask_sqlalchemy import get_state
+ImportError: cannot import name 'get_state' from 'flask_sqlalchemy' (/home/claudebypass/projects/code_snippets/venv/lib/python3.11/site-packages/flask_sqlalchemy/__init__.py)
+2025-05-13 01:51:04 WARNING: Falling back to standard logging configuration [in /home/claudebypass/projects/code_snippets/app/__init__.py:133]
+2025-05-13 01:55:34 WARNING: CSRF Error: 400 Bad Request: The CSRF session token is missing. [in /home/claudebypass/projects/code_snippets/app/__init__.py:64]
+2025-05-13 01:55:34 WARNING: Request completed: POST /auth/login - 400 BAD REQUEST - 52.97ms [ID: 658c8519-7c81-4ba4-b3ab-ca806cb91760] [in /home/claudebypass/projects/code_snippets/app/extreme_debugging_plan.py:317]

@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block title %}Create Snippet - CodeSnippets{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Create a New Snippet</h2>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('snippets.create') }}" class="snippet-form">
+                        {{ form.hidden_tag() }}
+                        
+                        <div class="mb-3">
+                            {{ form.title.label(class="form-label") }}
+                            {% if form.title.errors %}
+                                {{ form.title(class="form-control is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.title.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ form.title(class="form-control") }}
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.description.label(class="form-label") }}
+                            {% if form.description.errors %}
+                                {{ form.description(class="form-control is-invalid", rows=3) }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.description.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ form.description(class="form-control", rows=3) }}
+                            {% endif %}
+                            <div class="form-text">Optional brief description of your code snippet.</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.language.label(class="form-label") }}
+                            {% if form.language.errors %}
+                                {{ form.language(class="form-select is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.language.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ form.language(class="form-select") }}
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.code.label(class="form-label") }}
+                            {% if form.code.errors %}
+                                {{ form.code(class="form-control is-invalid code-editor", rows=15) }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.code.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ form.code(class="form-control code-editor", rows=15) }}
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Tags</label>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    {{ form.tags.label(class="form-label") }}
+                                    {% if form.tags.errors %}
+                                        {{ form.tags(class="form-select is-invalid", size=8, multiple=true) }}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.tags.errors %}
+                                                {{ error }}
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ form.tags(class="form-select", size=8, multiple=true) }}
+                                    {% endif %}
+                                    <div class="form-text">Hold Ctrl/Cmd to select multiple tags.</div>
+                                </div>
+                                <div class="col-md-6">
+                                    {{ form.new_tags.label(class="form-label") }}
+                                    {% if form.new_tags.errors %}
+                                        {{ form.new_tags(class="form-control is-invalid") }}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.new_tags.errors %}
+                                                {{ error }}
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ form.new_tags(class="form-control") }}
+                                    {% endif %}
+                                    <div class="form-text">Add new tags separated by commas (e.g. python, api, tutorial)</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3 form-check">
+                            {{ form.is_public(class="form-check-input") }}
+                            {{ form.is_public.label(class="form-check-label") }}
+                            <div class="form-text">If checked, your snippet will be visible to all users.</div>
+                        </div>
+                        
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{{ url_for('main.index') }}" class="btn btn-secondary me-md-2">Cancel</a>
+                            {{ form.submit(class="btn btn-primary") }}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

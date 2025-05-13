@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirm Your Email - CodeSnippets</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            background: #343a40;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px 5px 0 0;
+            margin: -20px -20px 20px;
+        }
+        .button {
+            display: inline-block;
+            background: #0275d8;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.8em;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>CodeSnippets</h1>
+        </div>
+        
+        <h2>Confirm Your Email Address</h2>
+        
+        <p>Hello {{ user.username }},</p>
+        
+        <p>Thank you for registering with CodeSnippets! To complete your registration and activate your account, please confirm your email address by clicking the button below:</p>
+        
+        <p style="text-align: center;">
+            <a href="{{ confirmation_url }}" class="button">Confirm Email Address</a>
+        </p>
+        
+        <p>If the button doesn't work, you can copy and paste the following link into your browser:</p>
+        
+        <p style="background: #eee; padding: 10px; word-break: break-all;">
+            {{ confirmation_url }}
+        </p>
+        
+        <p>This link will expire in 24 hours.</p>
+        
+        <p>If you did not register for a CodeSnippets account, please ignore this email.</p>
+        
+        <p>Thanks,<br>The CodeSnippets Team</p>
+        
+        <div class="footer">
+            <p>&copy; 2025 CodeSnippets. All rights reserved.</p>
+            <p>This is an automated message, please do not reply to this email.</p>
+        </div>
+    </div>
+</body>
+</html>

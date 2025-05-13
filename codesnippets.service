@@ -1,0 +1,34 @@
+[Unit]
+Description=CodeSnippets Web Application
+After=network.target
+After=syslog.target
+
+[Service]
+Type=simple
+User=root
+Group=root
+WorkingDirectory=/home/claudebypass/projects/code_snippets
+Environment="PATH=/usr/bin:/usr/local/bin:/home/claudebypass/projects/code_snippets/venv/bin"
+Environment="FLASK_PORT=9935"
+Environment="FLASK_ENV=production"
+Environment="PYTHONUNBUFFERED=1"
+Environment="GUNICORN_BIND=0.0.0.0:9935"
+
+# Create directory and file if needed
+ExecStartPre=/bin/bash -c 'mkdir -p /home/claudebypass/projects/code_snippets/instance && ([ -f /home/claudebypass/projects/code_snippets/instance/snippets.db ] || touch /home/claudebypass/projects/code_snippets/instance/snippets.db)'
+
+# Start the service
+ExecStart=/home/claudebypass/projects/code_snippets/venv/bin/gunicorn wsgi:application --bind=0.0.0.0:9935 --workers=4
+
+# Restart configuration
+Restart=on-failure
+RestartSec=10
+StartLimitIntervalSec=60
+StartLimitBurst=3
+
+# Standard output/error
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

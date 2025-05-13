@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="jumbotron text-center bg-light p-5 rounded">
+        <h1 class="display-4">Welcome to CodeSnippets</h1>
+        <p class="lead">Store, organize, and share your code snippets with syntax highlighting.</p>
+
+        {% if current_user.is_authenticated %}
+        <hr class="my-4">
+        <p>Start creating and sharing your code snippets today!</p>
+        <a class="btn btn-primary btn-lg" href="{{ url_for('snippets.create') }}" role="button">Create New Snippet</a>
+        <a class="btn btn-outline-secondary btn-lg" href="{{ url_for('snippets.my_snippets') }}" role="button">My Snippets</a>
+        {% else %}
+        <hr class="my-4">
+        <p>Join our community today to start storing your code snippets!</p>
+        <a class="btn btn-primary btn-lg" href="{{ url_for('auth.register') }}" role="button">Sign Up</a>
+        <a class="btn btn-outline-secondary btn-lg" href="{{ url_for('auth.login') }}" role="button">Login</a>
+        {% endif %}
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Syntax Highlighting</h5>
+                    <p class="card-text">Our app supports syntax highlighting for over 180 programming languages.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Organize with Tags</h5>
+                    <p class="card-text">Categorize your snippets with tags for easy organization and retrieval.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Public or Private</h5>
+                    <p class="card-text">Choose to keep your snippets private or share them with the community.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if recent_snippets %}
+    <div class="mt-5">
+        <h2 class="mb-4">Recently Shared Snippets</h2>
+        <div class="row">
+            {% for snippet in recent_snippets %}
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span>{{ snippet.title }}</span>
+                        <span class="badge bg-secondary">{{ snippet.language }}</span>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">{{ snippet.description or "No description" }}</p>
+                        <div class="d-flex justify-content-between">
+                            <small class="text-muted">By {{ snippet.author.username }} on {{ snippet.formatted_date }}</small>
+                            <a href="{{ url_for('snippets.view', snippet_id=snippet.id) }}" class="btn btn-sm btn-primary">View</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    {% if popular_tags %}
+    <div class="mt-5 mb-5">
+        <h3>Popular Tags</h3>
+        <div class="d-flex flex-wrap gap-2 mt-3">
+            {% for tag, count in popular_tags %}
+            <a href="{{ url_for('snippets.by_tag', tag_name=tag.name) }}" class="text-decoration-none">
+                <span class="badge bg-primary fs-6">{{ tag.name }} <span class="badge bg-light text-primary">{{ count }}</span></span>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

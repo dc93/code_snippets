@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Too Many Requests - CodeSnippets{% endblock %}
+
+{% block content %}
+<div class="container text-center pt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-body p-5">
+                    <h1 class="display-1 text-warning">429</h1>
+                    <h2 class="mb-4">Too Many Requests</h2>
+                    <p class="lead mb-4">You've made too many requests in a short period of time.</p>
+                    <p class="mb-4">Please wait a moment before trying again.</p>
+                    <div class="progress mb-4">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%"></div>
+                    </div>
+                    <p>
+                        <a href="{{ url_for('main.index') }}" class="btn btn-outline-secondary">
+                            <i class="bi bi-house-door"></i> Go to Homepage
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+    // Simple countdown effect
+    document.addEventListener('DOMContentLoaded', function() {
+        const progressBar = document.querySelector('.progress-bar');
+        let width = 0;
+        const interval = setInterval(function() {
+            width += 1;
+            progressBar.style.width = width + '%';
+            if (width >= 100) {
+                clearInterval(interval);
+                window.location.href = "{{ url_for('main.index') }}";
+            }
+        }, 300); // 30 seconds total (300ms * 100)
+    });
+</script>
+{% endblock %}
+{% endblock %}

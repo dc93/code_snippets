@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Access Denied - CodeSnippets{% endblock %}
+
+{% block content %}
+<div class="container text-center pt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-body p-5">
+                    <h1 class="display-1 text-danger">403</h1>
+                    <h2 class="mb-4">Access Denied</h2>
+                    <p class="lead mb-4">You don't have permission to access this resource.</p>
+                    {% if not current_user.is_authenticated %}
+                    <p>
+                        <a href="{{ url_for('auth.login') }}" class="btn btn-primary">
+                            Login to continue
+                        </a>
+                    </p>
+                    {% endif %}
+                    <p>
+                        <a href="{{ url_for('main.index') }}" class="btn btn-outline-secondary">
+                            <i class="bi bi-house-door"></i> Go to Homepage
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
