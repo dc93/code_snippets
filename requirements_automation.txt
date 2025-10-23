@@ -1,0 +1,17 @@
+# Media Automation System Requirements
+# Combines media_db requirements + automation-specific requirements
+
+# All media_db requirements
+-r requirements_media_db.txt
+
+# JDownloader integration
+myjdapi>=1.1.6
+
+# Task scheduling
+apscheduler>=3.10.0
+
+# File monitoring
+watchdog>=3.0.0
+
+# Additional utilities
+psutil>=5.9.0
