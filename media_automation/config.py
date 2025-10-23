@@ -53,6 +53,12 @@ AUTO_ORGANIZE = os.environ.get('AUTO_ORGANIZE', 'True').lower() == 'true'
 DELETE_AFTER_ORGANIZE = os.environ.get('DELETE_AFTER_ORGANIZE', 'True').lower() == 'true'
 MINIMUM_FILE_SIZE_MB = int(os.environ.get('MINIMUM_FILE_SIZE_MB', 50))
 
+# Supported video file extensions
+SUPPORTED_VIDEO_EXTENSIONS = [
+    '.mkv', '.mp4', '.avi', '.mov', '.wmv', '.flv',
+    '.webm', '.m4v', '.mpg', '.mpeg', '.m2v', '.3gp'
+]
+
 # Quality Preferences
 QUALITY_ORDER = [
     '2160p', '1080p', '720p', '480p'
