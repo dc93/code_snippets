@@ -15,3 +15,7 @@ watchdog>=3.0.0
 
 # Additional utilities
 psutil>=5.9.0
+
+# Web Dashboard
+flask>=2.2.0
+flask-cors>=3.0.10
