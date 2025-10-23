@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Media Automation{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Statistics Cards -->
+    <div class="col-md-3 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <h6 class="card-subtitle mb-2 text-muted">Shows</h6>
+                <h3 class="card-title mb-0">{{ total_shows }}</h3>
+                <small class="text-success">{{ monitored_shows }} monitored</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <h6 class="card-subtitle mb-2 text-muted">Queue</h6>
+                <h3 class="card-title mb-0">{{ total_queue }}</h3>
+                <small class="text-warning">{{ downloading }} downloading</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <h6 class="card-subtitle mb-2 text-muted">Recent Downloads</h6>
+                <h3 class="card-title mb-0">{{ recent_history|length }}</h3>
+                <small class="text-info">Last 10 items</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <button class="btn btn-primary btn-lg w-100" onclick="runFullAutomation()">
+                    <i class="bi bi-play-fill"></i> Run Automation
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Recent Activity -->
+    <div class="col-md-8 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-activity"></i> Recent Activity</h5>
+            </div>
+            <div class="card-body">
+                {% if recent_queue %}
+                    <div class="list-group list-group-flush">
+                        {% for item in recent_queue %}
+                            <div class="list-group-item">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">{{ item.show_title }} {{ item.episode_code }}</h6>
+                                    <span class="badge bg-{{ item.status.value|status_badge }}">
+                                        {{ item.status.value }}
+                                    </span>
+                                </div>
+                                <small class="text-muted">
+                                    {% if item.episode_title %}{{ item.episode_title }}{% endif %}
+                                    | {{ item.quality or 'Unknown quality' }}
+                                </small>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-muted text-center">No recent activity</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Upcoming Episodes -->
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-calendar-check"></i> Wanted</h5>
+            </div>
+            <div class="card-body">
+                {% if upcoming %}
+                    <div class="list-group list-group-flush">
+                        {% for item in upcoming %}
+                            <div class="list-group-item px-0">
+                                <small class="d-block text-muted">{{ item.show_title }}</small>
+                                <strong>{{ item.episode_code }}</strong>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-muted text-center">No wanted episodes</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Recent Downloads History -->
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-download"></i> Recent Downloads</h5>
+            </div>
+            <div class="card-body">
+                {% if recent_history %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Show</th>
+                                    <th>Episode</th>
+                                    <th>Quality</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in recent_history %}
+                                    <tr>
+                                        <td>{{ item.show_title }}</td>
+                                        <td>S{{ '%02d'|format(item.season_number) }}E{{ '%02d'|format(item.episode_number) }}</td>
+                                        <td>{{ item.quality or '-' }}</td>
+                                        <td>
+                                            {% if item.success %}
+                                                <span class="badge bg-success">Success</span>
+                                            {% else %}
+                                                <span class="badge bg-danger">Failed</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ item.timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="text-muted text-center">No download history</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function runFullAutomation() {
+    if (!confirm('Run full automation cycle?\n\n1. Check for new episodes\n2. Extract links\n3. Send to JDownloader\n4. Organize files')) {
+        return;
+    }
+
+    const btn = event.target.closest('button');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Running...';
+
+    // Run all automation steps
+    Promise.all([
+        fetch('/api/monitor/check', { method: 'POST' }),
+        fetch('/api/monitor/process', { method: 'POST' }),
+        fetch('/api/jdownloader/send', { method: 'POST' }),
+        fetch('/api/organize/scan', { method: 'POST' })
+    ]).then(() => {
+        alert('Automation complete!');
+        location.reload();
+    }).catch(err => {
+        alert('Error: ' + err);
+        btn.disabled = false;
+        btn.innerHTML = '<i class="bi bi-play-fill"></i> Run Automation';
+    });
+}
+</script>
+{% endblock %}

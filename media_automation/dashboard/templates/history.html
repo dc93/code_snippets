@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}History - Media Automation{% endblock %}
+
+{% block content %}
+<h2 class="mb-4"><i class="bi bi-clock-history"></i> Download History</h2>
+
+{% if history_items %}
+    <div class="card">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>Show</th>
+                        <th>Episode</th>
+                        <th>Quality</th>
+                        <th>Source</th>
+                        <th>Status</th>
+                        <th>Size</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in history_items %}
+                        <tr>
+                            <td>{{ item.show_title }}</td>
+                            <td>S{{ '%02d'|format(item.season_number) }}E{{ '%02d'|format(item.episode_number) }}</td>
+                            <td><span class="badge bg-info">{{ item.quality or 'Unknown' }}</span></td>
+                            <td>{{ item.source_site }}</td>
+                            <td>
+                                {% if item.success %}
+                                    <span class="badge bg-success">
+                                        <i class="bi bi-check-circle"></i> Success
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-danger">
+                                        <i class="bi bi-x-circle"></i> Failed
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td>{{ item.file_size|filesize }}</td>
+                            <td>{{ item.timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    {% if total_pages > 1 %}
+        <nav class="mt-3">
+            <ul class="pagination justify-content-center">
+                {% if page > 1 %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page - 1 }}">Previous</a>
+                    </li>
+                {% endif %}
+
+                {% for p in range(1, total_pages + 1) %}
+                    <li class="page-item {% if p == page %}active{% endif %}">
+                        <a class="page-link" href="?page={{ p }}">{{ p }}</a>
+                    </li>
+                {% endfor %}
+
+                {% if page < total_pages %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page + 1 }}">Next</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
+{% else %}
+    <div class="alert alert-info">
+        No download history yet.
+    </div>
+{% endif %}
+{% endblock %}

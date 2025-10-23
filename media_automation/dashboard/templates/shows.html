@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block title %}Shows - Media Automation{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-collection"></i> Show Library</h2>
+    <a href="{{ url_for('main.add_show') }}" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i> Add Show
+    </a>
+</div>
+
+{% if subscriptions %}
+    <div class="row">
+        {% for sub in subscriptions %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <h5 class="card-title">{{ sub.title }}</h5>
+                            {% if sub.monitored %}
+                                <span class="badge bg-success">Monitored</span>
+                            {% else %}
+                                <span class="badge bg-secondary">Paused</span>
+                            {% endif %}
+                        </div>
+
+                        {% if sub.year %}
+                            <p class="text-muted small mb-2">{{ sub.year }}</p>
+                        {% endif %}
+
+                        <div class="mb-3">
+                            <small class="text-muted">Quality:</small>
+                            <strong>{{ sub.quality_profile.value }}</strong>
+                        </div>
+
+                        <div class="row g-2 text-center mb-3">
+                            <div class="col-4">
+                                <div class="border rounded p-2">
+                                    <strong>{{ sub.total_episodes_monitored }}</strong>
+                                    <div class="small text-muted">Total</div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="border rounded p-2">
+                                    <strong class="text-success">{{ sub.episodes_downloaded }}</strong>
+                                    <div class="small text-muted">Downloaded</div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="border rounded p-2">
+                                    <strong class="text-warning">{{ sub.episodes_missing }}</strong>
+                                    <div class="small text-muted">Missing</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {% if sub.total_episodes_monitored > 0 %}
+                            <div class="progress mb-3" style="height: 20px;">
+                                <div class="progress-bar bg-success" role="progressbar"
+                                     style="width: {{ sub.completion_percentage }}%"
+                                     aria-valuenow="{{ sub.completion_percentage }}"
+                                     aria-valuemin="0" aria-valuemax="100">
+                                    {{ "%.0f"|format(sub.completion_percentage) }}%
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        <div class="btn-group w-100" role="group">
+                            <a href="{{ url_for('main.show_detail', show_id=sub.id) }}" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-eye"></i> View
+                            </a>
+                            <button class="btn btn-sm btn-outline-secondary" onclick="toggleMonitoring({{ sub.id }}, {{ 'false' if sub.monitored else 'true' }})">
+                                <i class="bi bi-pause"></i> {% if sub.monitored %}Pause{% else %}Resume{% endif %}
+                            </button>
+                        </div>
+                    </div>
+                    {% if sub.last_monitored %}
+                        <div class="card-footer text-muted small">
+                            Last checked: {{ sub.last_monitored.strftime('%Y-%m-%d %H:%M') }}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-info">
+        <h5><i class="bi bi-info-circle"></i> No Shows Yet</h5>
+        <p>You haven't subscribed to any shows yet. Click "Add Show" to get started!</p>
+    </div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function toggleMonitoring(showId, monitored) {
+    fetch(`/api/shows/${showId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ monitored: monitored })
+    }).then(() => location.reload());
+}
+</script>
+{% endblock %}

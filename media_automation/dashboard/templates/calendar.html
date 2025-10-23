@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Calendar - Media Automation{% endblock %}
+
+{% block content %}
+<h2 class="mb-4"><i class="bi bi-calendar3"></i> Episode Calendar</h2>
+
+<div class="alert alert-info">
+    <i class="bi bi-info-circle"></i> Showing episodes from the last 7 days and next 14 days
+</div>
+
+{% if calendar_data %}
+    <div class="row">
+        {% for date, episodes in calendar_data.items() %}
+            <div class="col-md-4 mb-3">
+                <div class="card">
+                    <div class="card-header">
+                        <strong>{{ date }}</strong>
+                    </div>
+                    <div class="card-body">
+                        {% for ep in episodes %}
+                            <div class="mb-2 p-2 border-start border-3 border-{{ ep.status.value|status_badge }}">
+                                <strong>{{ ep.show_title }}</strong><br>
+                                <small>{{ ep.episode_code }} - {{ ep.episode_title or 'Episode' }}</small><br>
+                                <span class="badge bg-{{ ep.status.value|status_badge }}">{{ ep.status.value }}</span>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-warning">
+        No episodes scheduled in this time range.
+    </div>
+{% endif %}
+{% endblock %}

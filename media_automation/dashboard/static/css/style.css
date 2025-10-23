@@ -1,0 +1,128 @@
+/* Media Automation Dashboard Styles */
+
+:root {
+    --primary-color: #0d6efd;
+    --success-color: #198754;
+    --warning-color: #ffc107;
+    --danger-color: #dc3545;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.25rem;
+}
+
+.card {
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+.card:hover {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.card-header {
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.progress {
+    height: 8px;
+}
+
+.badge {
+    font-weight: 500;
+}
+
+.table th {
+    font-weight: 600;
+    color: #495057;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.list-group-item {
+    border-left: none;
+    border-right: none;
+}
+
+.list-group-item:first-child {
+    border-top: none;
+}
+
+.list-group-item:last-child {
+    border-bottom: none;
+}
+
+.btn-group button {
+    font-size: 0.875rem;
+}
+
+/* Status badges */
+.badge.bg-wanted { background-color: #6c757d !important; }
+.badge.bg-searching { background-color: #0dcaf0 !important; }
+.badge.bg-queued { background-color: #0d6efd !important; }
+.badge.bg-downloading { background-color: #ffc107 !important; color: #000; }
+.badge.bg-downloaded { background-color: #198754 !important; }
+.badge.bg-completed { background-color: #198754 !important; }
+.badge.bg-failed { background-color: #dc3545 !important; }
+
+/* Footer */
+.footer {
+    margin-top: auto;
+}
+
+/* Calendar */
+.calendar-day {
+    min-height: 100px;
+    border: 1px solid #dee2e6;
+    padding: 0.5rem;
+}
+
+.calendar-day .date {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.calendar-episode {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    margin-bottom: 0.25rem;
+    background: #f8f9fa;
+    border-radius: 0.25rem;
+}
+
+/* Loading spinner */
+.spinner-border-sm {
+    width: 1rem;
+    height: 1rem;
+    border-width: 0.15em;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .table {
+        font-size: 0.875rem;
+    }
+
+    .card-title {
+        font-size: 1rem;
+    }
+
+    .btn-group {
+        flex-direction: column;
+    }
+
+    .btn-group button {
+        width: 100%;
+    }
+}

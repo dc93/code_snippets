@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block title %}Queue - Media Automation{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-download"></i> Download Queue</h2>
+    <div class="btn-group">
+        <button class="btn btn-primary" onclick="processQueue()">
+            <i class="bi bi-gear"></i> Process Queue
+        </button>
+        <button class="btn btn-success" onclick="sendToJD()">
+            <i class="bi bi-send"></i> Send to JDownloader
+        </button>
+    </div>
+</div>
+
+<!-- Status Filter -->
+<ul class="nav nav-pills mb-3">
+    <li class="nav-item">
+        <a class="nav-link {% if current_filter == 'all' %}active{% endif %}"
+           href="?status=all">
+            All ({{ status_counts|length }})
+        </a>
+    </li>
+    {% for status, count in status_counts.items() %}
+        <li class="nav-item">
+            <a class="nav-link {% if current_filter == status %}active{% endif %}"
+               href="?status={{ status }}">
+                {{ status.title() }} ({{ count }})
+            </a>
+        </li>
+    {% endfor %}
+</ul>
+
+<!-- Queue Table -->
+{% if queue_items %}
+    <div class="card">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>Show</th>
+                        <th>Episode</th>
+                        <th>Title</th>
+                        <th>Quality</th>
+                        <th>Status</th>
+                        <th>Progress</th>
+                        <th>Added</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in queue_items %}
+                        <tr>
+                            <td>{{ item.show_title }}</td>
+                            <td><strong>{{ item.episode_code }}</strong></td>
+                            <td>{{ item.episode_title or '-' }}</td>
+                            <td><span class="badge bg-info">{{ item.quality or '?' }}</span></td>
+                            <td>
+                                <span class="badge bg-{{ item.status.value|status_badge }}">
+                                    {{ item.status.value }}
+                                </span>
+                            </td>
+                            <td>
+                                {% if item.download_progress > 0 %}
+                                    <div class="progress" style="width: 100px;">
+                                        <div class="progress-bar" role="progressbar"
+                                             style="width: {{ item.download_progress }}%">
+                                            {{ "%.0f"|format(item.download_progress) }}%
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td>
+                                <small>{{ item.added_date.strftime('%m-%d %H:%M') }}</small>
+                            </td>
+                            <td>
+                                {% if item.status.value == 'failed' and item.can_retry %}
+                                    <button class="btn btn-sm btn-warning" onclick="retryDownload({{ item.id }})">
+                                        <i class="bi bi-arrow-clockwise"></i> Retry
+                                    </button>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% else %}
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle"></i> No items in queue matching this filter.
+    </div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function processQueue() {
+    const btn = event.target;
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Processing...';
+
+    fetch('/api/monitor/process', { method: 'POST' })
+        .then(r => r.json())
+        .then(data => {
+            alert(`Processed ${data.result.processed} episodes\nSuccess: ${data.result.success}\nFailed: ${data.result.failed}`);
+            location.reload();
+        })
+        .catch(err => {
+            alert('Error: ' + err);
+            btn.disabled = false;
+            btn.innerHTML = '<i class="bi bi-gear"></i> Process Queue';
+        });
+}
+
+function sendToJD() {
+    const btn = event.target;
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Sending...';
+
+    fetch('/api/jdownloader/send', { method: 'POST' })
+        .then(r => r.json())
+        .then(data => {
+            alert(`Sent ${data.result.sent} episodes to JDownloader\nSuccess: ${data.result.success}\nFailed: ${data.result.failed}`);
+            location.reload();
+        })
+        .catch(err => {
+            alert('Error: ' + err);
+            btn.disabled = false;
+            btn.innerHTML = '<i class="bi bi-send"></i> Send to JDownloader';
+        });
+}
+
+function retryDownload(itemId) {
+    fetch(`/api/queue/${itemId}/retry`, { method: 'POST' })
+        .then(() => location.reload());
+}
+</script>
+{% endblock %}

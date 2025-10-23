@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}Settings - Media Automation{% endblock %}
+
+{% block content %}
+<h2 class="mb-4"><i class="bi bi-gear"></i> System Settings</h2>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5>Configuration</h5>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle"></i>
+                    Settings are currently configured via environment variables and config.py.
+                    Web-based settings management coming in a future update.
+                </div>
+
+                <h6>Current Configuration</h6>
+                <table class="table table-sm">
+                    <tr>
+                        <th>Download Folder:</th>
+                        <td><code>/downloads</code></td>
+                    </tr>
+                    <tr>
+                        <th>TV Library Path:</th>
+                        <td><code>/media/tv</code></td>
+                    </tr>
+                    <tr>
+                        <th>Preferred Quality:</th>
+                        <td><code>1080p</code></td>
+                    </tr>
+                    <tr>
+                        <th>Check Interval:</th>
+                        <td><code>30 minutes</code></td>
+                    </tr>
+                </table>
+
+                <hr>
+
+                <h6>JDownloader</h6>
+                <button class="btn btn-primary" onclick="testJDownloader()">
+                    <i class="bi bi-plug"></i> Test Connection
+                </button>
+
+                <hr>
+
+                <h6>Manual Actions</h6>
+                <div class="d-grid gap-2">
+                    <button class="btn btn-outline-primary" onclick="organizeFiles()">
+                        <i class="bi bi-folder"></i> Organize Downloaded Files
+                    </button>
+                    <button class="btn btn-outline-warning" onclick="clearCompleted()">
+                        <i class="bi bi-trash"></i> Clear Completed from Queue
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5>System Info</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Version:</strong> 1.0.0 MVP</p>
+                <p><strong>Database:</strong> SQLite</p>
+                <p><strong>Status:</strong> <span class="badge bg-success">Running</span></p>
+            </div>
+        </div>
+
+        <div class="card mt-3">
+            <div class="card-header">
+                <h5>Quick Links</h5>
+            </div>
+            <div class="list-group list-group-flush">
+                <a href="https://github.com/mmarquezs/My.Jdownloader-API-Python-Library" class="list-group-item list-group-item-action" target="_blank">
+                    <i class="bi bi-book"></i> JDownloader API Docs
+                </a>
+                <a href="/api/stats" class="list-group-item list-group-item-action" target="_blank">
+                    <i class="bi bi-code-square"></i> API Stats
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function testJDownloader() {
+    alert('Testing JDownloader connection...\n\nThis feature will check if JDownloader is accessible.');
+    // TODO: Implement actual test
+}
+
+function organizeFiles() {
+    if (confirm('Scan downloads folder and organize files?')) {
+        fetch('/api/organize/scan', { method: 'POST' })
+            .then(r => r.json())
+            .then(data => {
+                alert(`Organized ${data.result.organized} files out of ${data.result.scanned} scanned.`);
+            });
+    }
+}
+
+function clearCompleted() {
+    if (confirm('Clear all completed items from queue?')) {
+        alert('This feature is coming soon!');
+    }
+}
+</script>
+{% endblock %}

@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block title %}{{ subscription.title }} - Media Automation{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2>{{ subscription.title }}</h2>
+        {% if subscription.year %}
+            <p class="text-muted">{{ subscription.year }}</p>
+        {% endif %}
+    </div>
+    <div>
+        <a href="{{ url_for('main.shows') }}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Shows
+        </a>
+    </div>
+</div>
+
+<!-- Show Info -->
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <strong>Status:</strong>
+                        {% if subscription.monitored %}
+                            <span class="badge bg-success">Monitored</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Paused</span>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-3">
+                        <strong>Quality:</strong> {{ subscription.quality_profile.value }}
+                    </div>
+                    <div class="col-md-3">
+                        <strong>Monitor:</strong> {{ subscription.monitor_status.value }}
+                    </div>
+                    <div class="col-md-3">
+                        <strong>Source:</strong> {{ subscription.preferred_source }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics -->
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <h3>{{ subscription.total_episodes_monitored }}</h3>
+                <p class="text-muted mb-0">Total Episodes</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <h3 class="text-success">{{ subscription.episodes_downloaded }}</h3>
+                <p class="text-muted mb-0">Downloaded</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <h3 class="text-warning">{{ subscription.episodes_missing }}</h3>
+                <p class="text-muted mb-0">Missing</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Seasons -->
+{% if seasons %}
+    {% for season_num, episodes in seasons.items() %}
+        <div class="card mb-3">
+            <div class="card-header">
+                <h5>Season {{ season_num }}</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover">
+                        <thead>
+                            <tr>
+                                <th>Episode</th>
+                                <th>Title</th>
+                                <th>Status</th>
+                                <th>Quality</th>
+                                <th>Added</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for ep in episodes %}
+                                <tr>
+                                    <td><strong>{{ ep.episode_code }}</strong></td>
+                                    <td>{{ ep.episode_title or '-' }}</td>
+                                    <td>
+                                        <span class="badge bg-{{ ep.status.value|status_badge }}">
+                                            {{ ep.status.value }}
+                                        </span>
+                                    </td>
+                                    <td>{{ ep.quality or '-' }}</td>
+                                    <td>{{ ep.added_date.strftime('%Y-%m-%d') }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% else %}
+    <div class="alert alert-info">
+        No episodes found for this show yet. Run the monitor to detect episodes.
+    </div>
+{% endif %}
+{% endblock %}
